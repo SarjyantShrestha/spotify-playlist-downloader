@@ -75,7 +75,7 @@ def get_metadata(path_flac, path_mp3):
 
 
 if __name__ == "__main__":
-    warnings.filterwarnings('ignore')
+    warnings.filterwarnings('ignore')  # ignore tqdmWarning
     sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
         client_id=client_info.SPOTIFY_CLIENT_ID, client_secret=client_info.SPOTIFY_CLIENT_SECRET))
 
@@ -84,15 +84,17 @@ if __name__ == "__main__":
     #     'Enter your playlist link (it must be a public playlist): ')
     results = sp.playlist_tracks(playlist_id=PLAYLIST_ID)
     tracks = results['items']
-    os.makedirs("downloads", exist_ok=True)
-    for track in tracks:
-        track_name = track['track']['name']
-        artist_name = track['track']['artists'][0]['name']
-        song_id = search_songs(track_name=track_name, artist_name=artist_name)
-        flac_path = download_song(
-            id=song_id[0], track_name=song_id[1], artist_name=song_id[2])
-        mp3_path = convert_to_mp3(file_path=flac_path)
-        get_metadata(path_flac=flac_path, path_mp3=mp3_path)
+    total_items = results['total']
+    print(f"Total songs detected: {total_items}")
+    # os.makedirs("downloads", exist_ok=True)
+    # for track in tracks:
+    #     track_name = track['track']['name']
+    #     artist_name = track['track']['artists'][0]['name']
+    #     song_id = search_songs(track_name=track_name, artist_name=artist_name)
+    #     flac_path = download_song(
+    #         id=song_id[0], track_name=song_id[1], artist_name=song_id[2])
+    #     mp3_path = convert_to_mp3(file_path=flac_path)
+    #     get_metadata(path_flac=flac_path, path_mp3=mp3_path)
 
-    print("removing flac..")
-    remove_flac()
+    # print("removing flac..")
+    # remove_flac()
