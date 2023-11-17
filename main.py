@@ -33,7 +33,7 @@ def download_song(id, track_name, artist_name):
         "downloads", f"{artist_name} - {track_name}.flac")
 
     total_size = int(response.headers['content-length'])
-    chunk_size = 64000
+    chunk_size = 1024
 
     with open(file_path, 'wb') as f:
         for chunk in tqdm(iterable=response.iter_content(chunk_size=chunk_size), desc=f"{track_name}", total=total_size/chunk_size, unit='KB'):
@@ -53,7 +53,7 @@ def remove_flac():
     dir_name = "./downloads"
     test = os.listdir(dir_name)
 
-    for item in test:
+    for item in tqdm(test):
         if item.endswith(".flac"):
             os.remove(os.path.join(dir_name, item))
 
