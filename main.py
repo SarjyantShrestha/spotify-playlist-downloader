@@ -28,20 +28,23 @@ def search_songs(artist_name, track_name):
 def download_song(id, track_name, artist_name):
     download_url = f"https://slavart-api.gamesdrive.net/api/download/track?id={id}"
     response = requests.get(download_url, stream=True)
-    print(response.status_code)
+    if response.status_code == 200:
+        file_path = os.path.join(
+            "downloads", f"{artist_name} - {track_name}.flac")
 
-    file_path = os.path.join(
-        "downloads", f"{artist_name} - {track_name}.flac")
+        total_size = int(response.headers['content-length'])
+        chunk_size = 1024
 
-    total_size = int(response.headers['content-length'])
-    chunk_size = 1024
+        with open(file_path, 'wb') as f:
+            for chunk in tqdm(iterable=response.iter_content(chunk_size=chunk_size), desc=f"{track_name}", total=total_size/chunk_size, unit='KB'):
+                if chunk:
+                    f.write(chunk)
 
-    with open(file_path, 'wb') as f:
-        for chunk in tqdm(iterable=response.iter_content(chunk_size=chunk_size), desc=f"{track_name}", total=total_size/chunk_size, unit='KB'):
-            if chunk:
-                f.write(chunk)
+        return file_path
 
-    return file_path
+    else:
+        print(f"{response.status_code} Error!! Server seems to be down..")
+        exit()
 
 
 def convert_to_mp3(file_path):
