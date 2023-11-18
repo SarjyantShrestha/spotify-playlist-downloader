@@ -1,0 +1,5 @@
+client_info.py
+Pipfile
+Pipfile.lock
+.cache
+downloads/
