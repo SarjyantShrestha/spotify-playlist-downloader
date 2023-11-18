@@ -33,8 +33,7 @@ def download_song(id, track_name, artist_name):
     file_path = os.path.join(
         "downloads", f"{artist_name} - {track_name}.flac")
 
-    total_size = response.headers
-    print(total_size)
+    total_size = int(response.headers['content-length'])
     chunk_size = 1024
 
     with open(file_path, 'wb') as f:
@@ -97,6 +96,4 @@ if __name__ == "__main__":
             id=song_id[0], track_name=song_id[1], artist_name=song_id[2])
         mp3_path = convert_to_mp3(file_path=flac_path)
         get_metadata(path_flac=flac_path, path_mp3=mp3_path)
-
-    print("removing flac..")
-    remove_flac()
+        remove_flac()
